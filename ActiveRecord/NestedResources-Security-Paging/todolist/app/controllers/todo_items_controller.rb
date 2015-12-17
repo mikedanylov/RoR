@@ -66,7 +66,7 @@ class TodoItemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_todo_item
-      @todo_list = TodoList.find(:todo_list_id)
+      @todo_list = TodoList.find(params[:todo_list_id])
       item_id = @todo_list.todo_items.find(params[:id])
       @todo_item = TodoItem.find(item_id)
     end
