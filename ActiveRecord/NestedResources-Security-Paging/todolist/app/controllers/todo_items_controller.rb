@@ -25,11 +25,12 @@ class TodoItemsController < ApplicationController
   # POST /todo_items
   # POST /todo_items.json
   def create
-    @todo_item = TodoItem.new(todo_item_params)
+    @todo_list = set_todo_list
+    @todo_item = @todo_list.todo_items.new(todo_item_params)
 
     respond_to do |format|
       if @todo_item.save
-        format.html { redirect_to @todo_item, notice: 'Todo item was successfully created.' }
+        format.html { redirect_to @todo_list, notice: 'Todo item was successfully created.' }
         format.json { render :show, status: :created, location: @todo_item }
       else
         format.html { render :new }
