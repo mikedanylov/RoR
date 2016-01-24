@@ -62,11 +62,14 @@ class Solution
   #
 
   def all(prototype={})
-    #place solution here
+    coll = Solution::collection
+    coll.find(prototype)
   end
 
   def find_by_name(fname, lname)
-    #place solution here
+    coll = Solution::collection
+    coll.find( { first_name: fname, last_name: lname } )
+        .projection( { _id: false, gender: false, group: false, secs: false } )
   end
 
   #
