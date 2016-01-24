@@ -43,15 +43,18 @@ class Solution
   #
 
   def clear_collection
-    #place solution here
+    @coll.drop
   end
 
-  def load_collection(file_path) 
-    #place solution here
+  def load_collection(file_path)
+    coll = Solution::collection
+    json = Solution::load_hash(file_path)
+    coll.insert_many(json)
   end
 
   def insert(race_result)
-    #place solution here
+    coll = Solution::collection
+    coll.insert_one(race_result)
   end
 
   #
