@@ -91,11 +91,19 @@ class Solution
   #
 
   def find_between(min, max) 
-    #place solution here
+    coll = Solution::collection
+    coll.find( { secs: { :$gt => min, :$lt => max } } )
+
   end
 
   def find_by_letter(letter, offset, limit) 
-    #place solution here
+    letter = letter.upcase
+    coll = Solution::collection
+    coll.find( { last_name: /^#{letter}.+/ } )
+        .skip(offset)
+        .limit(limit)
+        .sort( { last_name: 1 } )
+
   end
 
   #
