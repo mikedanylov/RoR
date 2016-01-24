@@ -111,11 +111,24 @@ class Solution
   #
   
   def update_racer(racer)
-    #place solution here
+    coll = Solution::collection
+    coll.find( { _id: racer[:_id] } )
+        .replace_one( {
+            _id: racer[:_id],
+            number: racer[:number],
+            first_name: racer[:first_name],
+            last_name: racer[:last_name],
+            gender: racer[:gender],
+            group: racer[:group],
+            secs: racer[:secs]
+          }
+        )
   end
 
   def add_time(number, secs)
-    #place solution here
+    coll = Solution::collection
+    coll.find( { number: number } )
+        .update_one( { :$inc => { secs: secs } } )
   end
 
 end
