@@ -1,5 +1,5 @@
-# require 'mongo'
-# require 'json'
+
+require 'pp'
 
 class Racer
 	
@@ -14,16 +14,14 @@ class Racer
   end
 
   def self.collection
-    self.mongo_client[RACE_COLLECTION]
+    @coll = self.mongo_client[RACE_COLLECTION]
   end
   
-#   # def self.load_hash(file_path) 
-#   #   file=File.read(file_path)
-#   #   JSON.parse(file)
-#   # end
-  
-#   # def initialize
-#   #   @coll = self.class.collection
-#   # end
+  def self.all(prototype={}, sort={number:1}, skip=0, limit=nil) 
+  	return @coll.find(prototype).sort(sort).skip(skip) if limit == nil
+  	@coll.find(prototype).sort(sort).skip(skip).limit(limit)
+	end
 
 end
+
+racers = Racer.collection
