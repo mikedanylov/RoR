@@ -1,5 +1,7 @@
 
 require 'pp'
+require 'json'
+require 'mongo'
 
 class Racer
 	attr_accessor :id, :number, :first_name, :last_name, :gender, :group, :secs
@@ -23,7 +25,7 @@ class Racer
   	@coll.find(prototype).sort(sort).skip(skip).limit(limit)
 	end
 
-	def initialize(params={}) 
+	def initialize(params={})
 	  @id=params[:_id].nil? ? params[:id] : params[:_id].to_s
 	  @number=params[:number].to_i
 	  @first_name=params[:first_name]
@@ -33,6 +35,9 @@ class Racer
 	  @secs=params[:secs].to_i
 	end
 
-end
+	def self.find id
+	  racer = @coll.find( { _id: id } ).first
+	  return racer.nil? ? nil : Racer.new(racer)
+	end
 
-racers = Racer.collection
+end
