@@ -13,9 +13,9 @@ class Racer
 
 	def self.mongo_client
 		url=ENV['MONGO_URL'] ||= MONGO_URL
-    database=ENV['MONGO_DATABASE'] ||= MONGO_DATABASE 
-    db = Mongo::Client.new(url)
-    @@db=db.use(database)
+		database=ENV['MONGO_DATABASE'] ||= MONGO_DATABASE 
+		db = Mongo::Client.new(url)
+		@@db=db.use(database)
 	end
 
 	def self.collection
@@ -25,14 +25,14 @@ class Racer
 	
 	def self.all(prototype={}, sort={number:1}, skip=0, limit=nil) 
 		return self.collection
-								.find(prototype)
-								.sort(sort)
-								.skip(skip) if limit == nil
+					.find(prototype)
+					.sort(sort)
+					.skip(skip) if limit == nil
 		self.collection
-				.find(prototype)
-				.sort(sort)
-				.skip(skip)
-				.limit(limit)
+			.find(prototype)
+			.sort(sort)
+			.skip(skip)
+			.limit(limit)
 	end
 
 	def initialize(params={})
@@ -47,8 +47,8 @@ class Racer
 
 	def self.find id
 		racer = self.collection
-								.find( { _id: BSON::ObjectId.from_string(id) } )
-								.first
+					.find( { _id: BSON::ObjectId.from_string(id) } )
+					.first
 		return racer.nil? ? nil : Racer.new(racer)
 	end
 
@@ -70,35 +70,58 @@ class Racer
 	end
 
 	def update(params)
-	  @number = params[:number].to_i
-	  @first_name = params[:first_name] 
-	  @last_name = params[:last_name]  
-	  @secs = params[:secs].to_i
-	  @group=params[:group]
-	  @gender=params[:gender]
-
-	  params.slice!(:number, :first_name, :last_name, :gender, :group, :secs) if !params.nil?
-	  Racer.collection
-	  			.find(_id: BSON::ObjectId.from_string(@id))
-	  			.replace_one(params)
+		@number = params[:number].to_i
+		@first_name = params[:first_name] 
+		@last_name = params[:last_name]  
+		@secs = params[:secs].to_i
+		@group=params[:group]
+		@gender=params[:gender]
+		
+		if !params.nil?
+			params.slice!(:number, :first_name, :last_name, :gender, :group, :secs)
+		end
+		
+		Racer.collection
+			.find(_id: BSON::ObjectId.from_string(@id))
+			.replace_one(params)
 	end
 
 	def destroy
-	  Racer.collection
-	  			.find(number: @number)
-	  			.delete_one
+		Racer.collection
+			.find(number: @number)
+			.delete_one
 	end
 
 	def persisted?
-	  !@id.nil?
+		!@id.nil?
 	end
 
 	def created_at
-	  nil
+		nil
 	end
-	
+
 	def updated_at
-	  nil
+		nil
+	end
+
+	def self.paginate(params)
+		page = (params[:page] || 1).to_i
+		limit = (params[:per_page] || 30).to_i
+		skip = (page - 1) * limit
+		racers = []
+		docs = Racer.collection.find()
+								.sort(number: 1)
+								.skip(skip)
+								.limit(limit)
+		# loop over all found records
+		docs.each do |doc|
+			racers << Racer.new(doc)
+		end
+
+		total = Racer.collection.count()
+		WillPaginate::Collection.create(page, limit, total) do |pager|
+			pager.replace(racers)
+	  	end
 	end
 
 end
