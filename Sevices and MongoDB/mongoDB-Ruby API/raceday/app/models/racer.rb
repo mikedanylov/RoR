@@ -4,6 +4,7 @@ require 'json'
 require 'mongo'
 
 class Racer
+	include ActiveModel::Model
 	attr_accessor :id, :number, :first_name, :last_name, :gender, :group, :secs
 
 	MONGO_URL = 'mongodb://localhost:27017'
@@ -23,8 +24,15 @@ class Racer
 	end
 	
 	def self.all(prototype={}, sort={number:1}, skip=0, limit=nil) 
-		return self.collection.find(prototype).sort(sort).skip(skip) if limit == nil
-		self.collection.find(prototype).sort(sort).skip(skip).limit(limit)
+		return self.collection
+								.find(prototype)
+								.sort(sort)
+								.skip(skip) if limit == nil
+		self.collection
+				.find(prototype)
+				.sort(sort)
+				.skip(skip)
+				.limit(limit)
 	end
 
 	def initialize(params={})
@@ -38,7 +46,9 @@ class Racer
 	end
 
 	def self.find id
-		racer = self.collection.find( { _id: BSON::ObjectId.from_string(id) } ).first
+		racer = self.collection
+								.find( { _id: BSON::ObjectId.from_string(id) } )
+								.first
 		return racer.nil? ? nil : Racer.new(racer)
 	end
 
@@ -53,7 +63,9 @@ class Racer
 		})
 
 		if result.n == 1
-			@id = Racer.collection.find( { number: @number } ).first[:_id] 
+			@id = Racer.collection
+									.find( { number: @number } )
+									.first[:_id] 
 		end
 	end
 
@@ -66,13 +78,19 @@ class Racer
 	  @gender=params[:gender]
 
 	  params.slice!(:number, :first_name, :last_name, :gender, :group, :secs) if !params.nil?
-	  Racer.collection.find(_id: BSON::ObjectId.from_string(@id)).replace_one(params)
+	  Racer.collection
+	  			.find(_id: BSON::ObjectId.from_string(@id))
+	  			.replace_one(params)
 	end
 
 	def destroy
 	  Racer.collection
 	  			.find(number: @number)
 	  			.delete_one
+	end
+
+	def persisted?
+	  !@id.nil?
 	end
 
 end
