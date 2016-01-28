@@ -69,4 +69,10 @@ class Racer
 	  Racer.collection.find(_id: BSON::ObjectId.from_string(@id)).replace_one(params)
 	end
 
+	def destroy
+	  Racer.collection
+	  			.find(number: @number)
+	  			.delete_one
+	end
+
 end
