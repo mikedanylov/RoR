@@ -54,8 +54,8 @@ class Racer
 
 	def save
 		result = Racer.collection.insert_one({
-			first_name: @first_name,
-			last_name: 	@last_name,
+			first_name: 	@first_name,
+			last_name: 		@last_name,
 			number: 		@number,
 			gender: 		@gender,
 			group: 			@group,
@@ -64,8 +64,12 @@ class Racer
 
 		if result.n == 1
 			@id = Racer.collection
-									.find( { number: @number } )
-									.first[:_id] 
+						.find( {
+							number: 	@number,
+							first_name: @first_name,
+							last_name: 	@last_name
+						 } )
+						.first[:_id] 
 		end
 	end
 
