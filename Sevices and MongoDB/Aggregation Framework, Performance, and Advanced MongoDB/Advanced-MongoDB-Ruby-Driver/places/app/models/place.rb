@@ -1,3 +1,5 @@
+require 'pp'
+
 class Place
 	include Mongoid::Document
 	attr_accessor :id, :formatted_address, :location, :address_components
@@ -33,6 +35,19 @@ class Place
 		end 
 		@formatted_address = hash[:formatted_address] if hash.key?(:formatted_address)
 		@location = hash[:geometry][:geolocation] if hash.key?(:geometry)
+	end
+
+	def self.find_by_short_name name
+
+		Place.collection.find({
+			address_components: {
+				:$elemMatch => {
+					short_name: name
+				}					
+			}
+		})
+		# pp places.first
+		# places.each {|r| r[:address_components].each {|address| pp address[:short_name]}}
 	end
 
 end
