@@ -15,4 +15,10 @@ class Place
 		collection = ENV['RACE_COLLECTION'] ||= RACE_COLLECTION
 		return mongo_client[collection]
 	end
+
+	def self.load_all file_path
+		coll = JSON.parse(File.read(file_path))
+		self.collection.insert_many(coll)
+	end
+
 end
