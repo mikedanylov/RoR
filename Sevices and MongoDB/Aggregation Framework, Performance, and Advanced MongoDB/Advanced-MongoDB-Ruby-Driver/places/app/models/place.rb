@@ -53,4 +53,12 @@ class Place
 		return places
 	end
 
+	def self.find id
+		Place.new(
+			self.collection
+			.find( { _id: BSON::ObjectId.from_string(id) } )
+			.first
+		)
+	end
+
 end
