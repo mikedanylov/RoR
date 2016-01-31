@@ -26,19 +26,16 @@ class Place
 	end
 
 	def initialize hash
-		@id = hash[:_id].to_s if hash.key?(:_id)
+		@id = hash[:_id].to_s if hash[:_id]
 		@address_components = []
-		if hash.key?(:address_components)
-			for address in hash[:address_components]
-				@address_components.push(AddressComponent.new(address))
-			end
-		end 
-		@formatted_address = hash[:formatted_address] if hash.key?(:formatted_address)
-		@location = hash[:geometry][:geolocation] if hash.key?(:geometry)
+		for address in hash[:address_components]
+			@address_components.push(AddressComponent.new(address))
+		end
+		@formatted_address = hash[:formatted_address] if hash[:formatted_address]
+		@location = Point.new(hash[:geometry][:geolocation])
 	end
 
 	def self.find_by_short_name name
-
 		Place.collection.find({
 			address_components: {
 				:$elemMatch => {
@@ -46,8 +43,14 @@ class Place
 				}					
 			}
 		})
-		# pp places.first
-		# places.each {|r| r[:address_components].each {|address| pp address[:short_name]}}
+	end
+
+	def self.to_places mongo_coll_view
+		places = []
+		mongo_coll_view.each do |hash|
+			places.push(Place.new(hash))
+		end
+		return places
 	end
 
 end
