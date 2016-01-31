@@ -65,13 +65,21 @@ class Solution
 
 	def id_number_map 
 		Solution.collection.find.aggregate([ { :$project => { 
-			_id: 1,
 			number: 1
 		} } ])
 	end
 
 	def concat_names
-	#place solution here
+		Solution.collection.find.aggregate([
+			{ :$project => { 
+					_id: 0,
+					number: 1,
+					name: {
+						:$concat => [ "$first_name", " ", "$last_name" ]
+					}
+				}
+			}
+		])
 	end
 
 	#
