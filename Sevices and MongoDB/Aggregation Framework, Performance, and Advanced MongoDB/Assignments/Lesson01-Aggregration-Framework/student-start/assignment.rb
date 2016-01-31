@@ -64,7 +64,10 @@ class Solution
 	end
 
 	def id_number_map 
-	#place solution here
+		Solution.collection.find.aggregate([ { :$project => { 
+			_id: 1,
+			number: 1
+		} } ])
 	end
 
 	def concat_names
