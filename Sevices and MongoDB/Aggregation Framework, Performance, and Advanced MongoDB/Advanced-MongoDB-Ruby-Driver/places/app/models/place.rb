@@ -26,7 +26,7 @@ class Place
 	end
 
 	def initialize hash
-		@id = hash[:_id].to_s if hash[:_id]
+		@id = hash[:_id].to_s
 		@address_components = []
 		for address in hash[:address_components]
 			@address_components.push(AddressComponent.new(address))
@@ -54,11 +54,13 @@ class Place
 	end
 
 	def self.find id
-		Place.new(
-			self.collection
-			.find( { _id: BSON::ObjectId.from_string(id) } )
-			.first
-		)
+		pp id
+		pp id.class
+		elem = self.collection
+					.find( { _id: BSON::ObjectId.from_string(id) } )
+					.first
+		return nil if elem == nil
+		Place.new(elem)
 	end
 
 	def self.all(offset=0, limit=0)
@@ -66,6 +68,12 @@ class Place
 		self.collection.find().skip(offset).limit(limit)
 			.each { |place| places.push(Place.new(place)) }
 		return places
+	end
+
+	def destroy
+		Place.collection.delete_one({
+			_id: BSON::ObjectId.from_string(@id)
+		})
 	end
 
 end
