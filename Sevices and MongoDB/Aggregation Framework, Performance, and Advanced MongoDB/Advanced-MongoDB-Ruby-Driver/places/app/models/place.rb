@@ -61,4 +61,11 @@ class Place
 		)
 	end
 
+	def self.all(offset=0, limit=0)
+		places = []
+		self.collection.find().skip(offset).limit(limit)
+			.each { |place| places.push(Place.new(place)) }
+		return places
+	end
+
 end
