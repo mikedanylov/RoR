@@ -106,4 +106,22 @@ class Place
 		]).to_a.map {|h| h[:_id]}
 	end
 
+	def self.find_ids_by_country_code country_code
+		self.collection.find.aggregate([
+			{ :$unwind => '$address_components' },
+			{ :$project => {
+					short_name: '$address_components.short_name',
+					types: '$address_components.types'
+				}
+			},
+			{ :$unwind => '$types' },
+			{ :$match =>
+				{
+					types: 'country',
+					short_name: country_code
+				}
+			}
+		]).to_a.map {|doc| doc[:_id].to_s}
+	end
+
 end
