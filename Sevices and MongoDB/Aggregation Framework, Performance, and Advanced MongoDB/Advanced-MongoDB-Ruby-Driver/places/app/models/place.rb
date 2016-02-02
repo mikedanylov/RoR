@@ -75,7 +75,7 @@ class Place
 	end
 
 	def self.get_address_components(sort={_id: 1}, offset=0, limit=200)
-		Place.collection.find.aggregate([
+		self.collection.find.aggregate([
 			{ :$unwind => '$address_components' },
 			{
 				:$project => {
@@ -85,12 +85,25 @@ class Place
 						geolocation: 1
 					}
 				}
-			# }
 			},
 			{ :$sort => sort },
 			{ :$skip => offset },
 			{ :$limit => limit}
 		])
+	end
+
+	def self.get_country_names
+		self.collection.find.aggregate([
+			{ :$unwind => '$address_components' },
+			{ :$project => {
+					long_name: '$address_components.long_name',
+					types: '$address_components.types'
+				}
+			},
+			{ :$unwind => '$types' },
+			{ :$match => { types: 'country' } },
+			{ :$group => { _id: '$long_name' } }
+		]).to_a.map {|h| h[:_id]}
 	end
 
 end
