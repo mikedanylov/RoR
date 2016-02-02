@@ -134,4 +134,17 @@ class Place
 		self.collection.indexes.drop_all
 	end
 
+	def self.near(point, max_meters=0)
+		self.collection.find(
+			{ 'geometry.geolocation':
+				{
+					:$near => {
+						:$geometry => point,
+						:$maxDistance => max_meters
+					}
+				}
+			}
+		)
+	end
+
 end
