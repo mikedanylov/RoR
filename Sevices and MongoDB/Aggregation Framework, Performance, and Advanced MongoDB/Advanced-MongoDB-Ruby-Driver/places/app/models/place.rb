@@ -54,8 +54,6 @@ class Place
 	end
 
 	def self.find id
-		pp id
-		pp id.class
 		elem = self.collection
 					.find( { _id: BSON::ObjectId.from_string(id) } )
 					.first
@@ -74,6 +72,25 @@ class Place
 		Place.collection.delete_one({
 			_id: BSON::ObjectId.from_string(@id)
 		})
+	end
+
+	def self.get_address_components(sort={_id: 1}, offset=0, limit=200)
+		Place.collection.find.aggregate([
+			{ :$unwind => '$address_components' },
+			{
+				:$project => {
+					address_components: 1,
+					formatted_address: 1,
+					geometry: {
+						geolocation: 1
+					}
+				}
+			# }
+			},
+			{ :$sort => sort },
+			{ :$skip => offset },
+			{ :$limit => limit}
+		])
 	end
 
 end
