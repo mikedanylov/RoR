@@ -1,4 +1,8 @@
+# require_relative '../../config/environment'
+# require 'rails_helper'
 require 'pp'
+require 'mongoid'
+require 'geo_utils'
 
 class Place
 	include Mongoid::Document
@@ -28,7 +32,7 @@ class Place
 	def initialize hash
 		@id = hash[:_id].to_s
 		@address_components = []
-		for address in hash[:address_components]
+		for address in hash[:address_components].to_a
 			@address_components.push(AddressComponent.new(address))
 		end
 		@formatted_address = hash[:formatted_address] if hash[:formatted_address]
@@ -145,6 +149,10 @@ class Place
 				}
 			}
 		)
+	end
+
+	def near(max_meters=nil)
+		Place.to_places(Place.near(@location.to_hash, max_meters))
 	end
 
 end
