@@ -111,8 +111,11 @@ feature "Module #3 Geolocation Tests" do
         # Create a place around reference point
         p1 = Place.new({:formatted_address=>"JHU, Baltimore, MD", :geometry=>{:geolocation=>ref_point}})
         list_near = p1.near(ref_distance)
+        # pp list_near
         expect(list_near).to be_a Array
+        # pp list_near.class
         expect(ref_list.count).to eq list_near.count
+        # pp ref_list
         id_list = ref_list.map{|e| e[:_id]}
         list_near.each { |l| 
           expect(l).to be_a Place
