@@ -2,7 +2,6 @@
 # require 'rails_helper'
 require 'pp'
 require 'mongoid'
-require 'geo_utils'
 
 class Place
 	include Mongoid::Document
@@ -67,7 +66,7 @@ class Place
 
 	def self.all(offset=0, limit=0)
 		places = []
-		self.collection.find().skip(offset).limit(limit)
+		Place.collection.find().skip(offset).limit(limit)
 			.each { |place| places.push(Place.new(place)) }
 		return places
 	end
