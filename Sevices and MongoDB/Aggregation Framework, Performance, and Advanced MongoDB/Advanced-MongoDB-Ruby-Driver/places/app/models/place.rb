@@ -4,6 +4,7 @@ require 'pp'
 require 'mongoid'
 
 class Place
+	include ActiveModel::Model
 	include Mongoid::Document
 	attr_accessor :id, :formatted_address, :location, :address_components
 
@@ -161,6 +162,10 @@ class Place
 			res.push(Photo.new(photo_hash))
 		end
 		return res
+	end
+
+	def persisted?
+		!@id.nil?
 	end
 
 end
