@@ -53,4 +53,10 @@ class Photo
 		end
 	end
 
+	def self.all(offset=0,limit=0)
+		self.mongo_client.database.fs.find
+			.skip(offset).limit(limit)
+			.map {|doc| Photo.new(doc) }
+	end
+
 end
