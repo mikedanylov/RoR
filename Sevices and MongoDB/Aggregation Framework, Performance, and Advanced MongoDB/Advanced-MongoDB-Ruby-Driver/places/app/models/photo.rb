@@ -65,4 +65,16 @@ class Photo
 		doc.nil? ? nil : photo = Photo.new(doc)
 	end
 
+	def contents
+		f = self.class.mongo_client.database.fs
+				.find_one(:_id=>BSON::ObjectId.from_string(@id))
+		if f 
+			buffer = ""
+			f.chunks.reduce([]) do |x,chunk| 
+				buffer << chunk.data.data 
+			end
+			return buffer
+		end 
+	end
+
 end
