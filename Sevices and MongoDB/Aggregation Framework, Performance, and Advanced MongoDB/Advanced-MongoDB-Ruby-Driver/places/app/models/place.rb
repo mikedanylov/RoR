@@ -154,4 +154,13 @@ class Place
 		Place.to_places(Place.near(@location.to_hash, max_meters))
 	end
 
+	def photos(offset=0, limit=0)
+		photos = Photo.find_photos_for_place @id
+		res = []
+		photos.each do |photo_hash|
+			res.push(Photo.new(photo_hash))
+		end
+		return res
+	end
+
 end
