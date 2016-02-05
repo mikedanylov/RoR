@@ -3,7 +3,7 @@ require 'pp'
 class Photo
   include Mongoid::Document
 
-  attr_accessor :id, :location, :contents
+  attr_accessor :id, :location, :contents, :place
 
 	RACE_COLLECTION='race1'
 	
@@ -42,14 +42,12 @@ class Photo
 			grid_file = Mongo::Grid::File.new(@contents.read, description)
 			@id = self.class.mongo_client.database.fs.insert_one(grid_file).to_s
 		else
-			doc = self.class.mongo_client.database.fs.find(
-			'_id': BSON::ObjectId.from_string(@id)
-			).first
+			doc = self.class.mongo_client.database.fs
+						.find('_id': BSON::ObjectId.from_string(@id)).first
 			doc[:metadata][:place] = @place
 			doc[:metadata][:location] = @location.to_hash
-			self.class.mongo_client.database.fs.find(
-			'_id': BSON::ObjectId.from_string(@id)
-			).update_one(doc)
+			self.class.mongo_client.database.fs
+				.find('_id': BSON::ObjectId.from_string(@id)).update_one(doc)
 		end
 	end
 
@@ -90,6 +88,12 @@ class Photo
     			'$near': @location.to_hash
     		}
 	      }).limit(1).projection({_id: 1}).first[:_id]
+	end
+
+	def place
+		if !@place.nil?
+    		Place.find(@place.to_s)
+    	end
 	end
 
 end
