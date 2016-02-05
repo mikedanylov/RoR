@@ -74,7 +74,13 @@ class Photo
 				buffer << chunk.data.data 
 			end
 			return buffer
-		end 
+		end
+	end
+
+	def destroy
+		f = self.class.mongo_client.database.fs
+				.find(:_id=>BSON::ObjectId.from_string(@id))
+				.delete_one
 	end
 
 end
