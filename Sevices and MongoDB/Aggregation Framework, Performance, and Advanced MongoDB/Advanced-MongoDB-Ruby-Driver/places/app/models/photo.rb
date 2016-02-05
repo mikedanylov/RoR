@@ -59,4 +59,10 @@ class Photo
 			.map {|doc| Photo.new(doc) }
 	end
 
+	def self.find id
+		doc = self.mongo_client.database.fs
+				.find( { _id: BSON::ObjectId.from_string(id) } ).first		
+		doc.nil? ? nil : photo = Photo.new(doc)
+	end
+
 end
