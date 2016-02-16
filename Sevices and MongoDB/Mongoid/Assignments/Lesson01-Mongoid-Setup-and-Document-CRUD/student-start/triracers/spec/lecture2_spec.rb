@@ -12,8 +12,8 @@ describe "Module #3, Lecture 2 Setup and Collection Tests" do
 
     around :each do |example|
         if $continue
-            $continue = false 
-            example.run 
+            $continue = false
+            example.run
             $continue = true unless example.exception
         else
             example.skip
@@ -33,13 +33,13 @@ describe "Module #3, Lecture 2 Setup and Collection Tests" do
         expect(Racer).to respond_to(:collection)
         expect(Racer.collection).to_not be_nil
         expect(Racer.collection).to be_a Mongo::Collection
-        expect(Racer.collection.name).to eq("racer1")
+        expect(Racer.collection.name).to eq("racers")
       end
 
       it "Racer includes Mongoid::Document mixin" do
         expect((class << r; self; end).included_modules).to include(Mongoid::Document)
       end
-      
+
       it "Racer includes Mongoid::Timestamps mixin" do
         expect((class << r; self; end).included_modules).to include(Mongoid::Timestamps)
         expect(r).to respond_to(:created_at)
@@ -48,7 +48,7 @@ describe "Module #3, Lecture 2 Setup and Collection Tests" do
         expect(r.updated_at).to be_nil
       end
 
-      it "Racer class implements expected attributes" do 
+      it "Racer class implements expected attributes" do
         expect(r).to respond_to(:first_name)
         expect(r).to respond_to(:last_name)
         expect(r).to respond_to(:dob)
@@ -61,7 +61,7 @@ describe "Module #3, Lecture 2 Setup and Collection Tests" do
         expect(r.date_of_birth.to_s).to include("1957-03-12")
         expect(r.gender).to eq "F"
         r.first_name = "Thing"
-        r.last_name = "One"        
+        r.last_name = "One"
         expect(r.changed?).to be true
       end
 
@@ -79,6 +79,6 @@ describe "Module #3, Lecture 2 Setup and Collection Tests" do
 
       it "Racer collection has the record input from the Rails console" do
         expect(Racer.collection.find(:dob=>Date.new(1957,1,1), :fn=>"Sally", :gender=>"F", :ln=>nil).first).to_not be_nil
-      end 
+      end
     end
   end
