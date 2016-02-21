@@ -25,7 +25,7 @@ class Point
     def self.demongoize object
         case object
         when Hash then
-          Point.new(object[:coordinates][0], object[:coordinates][1])
+            Point.new(object[:coordinates][0], object[:coordinates][1])
         when nil then nil
         end
     end
