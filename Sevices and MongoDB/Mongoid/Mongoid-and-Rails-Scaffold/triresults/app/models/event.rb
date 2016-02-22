@@ -7,6 +7,8 @@ class Event
     field :u, as: :units, type: String
 
     embedded_in :parent, polymorphic: true, touch: true
+    validates :order, presence: true
+    validates :name, presence: true
 
     def meters
         case self.units
