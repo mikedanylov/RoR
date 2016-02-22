@@ -8,4 +8,6 @@ class Race
 
     embeds_many :events, as: :parent, order: [:order.asc], class_name: 'Event'
 
+    scope :upcoming, -> { where(:date.gte => Date.current)}
+    scope :past, -> { where(:date.lt => Date.current)}
 end
