@@ -20,5 +20,4 @@ class LegResult
         self[:secs] = val
         calc_ave
     end
-
 end
