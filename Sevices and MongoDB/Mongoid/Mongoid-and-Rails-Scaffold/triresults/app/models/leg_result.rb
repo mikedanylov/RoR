@@ -3,6 +3,8 @@ class LegResult
 
     field :secs, type: Float
 
+    embedded_in :entrant
+
     after_initialize do |doc|
         doc.calc_ave
     end
