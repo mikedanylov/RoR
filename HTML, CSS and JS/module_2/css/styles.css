@@ -1,19 +1,18 @@
 /********** Base styles **********/
 * {
   box-sizing: border-box;
-  font-family: Helvetica;
+  font-family: Sans-serif;
+  color: black;
 }
 
 h1 {
   margin-top: 35px;
-  margin-bottom: 15px;
   text-align: center;
 }
 
 /* Simple Responsive Framework. */
 .row {
   width: 100%;
-  border: 2px solid green;
   overflow: hidden;
 }
 
@@ -22,13 +21,12 @@ h1 {
   margin-right: -2px;
   float: right;
   width: 120px;
-  padding: 2px;
+  padding: 3px;
   border: 2px solid black;
   text-align: center;
 }
 
 .label-chicken {
-  color: black;
   background-color: #ffb3b3;
 }
 
@@ -38,10 +36,8 @@ h1 {
 }
 
 .label-sushi {
-  color: black;
   background-color: #ffe680;
 }
-
 
 p {
   width: 90%;
@@ -49,8 +45,6 @@ p {
   margin-right: auto;
   margin-left: auto;
   margin-top: 35px;
-  font-family: Helvetica;
-  color: black;
   overflow: hidden;
 }
 
@@ -58,9 +52,11 @@ section {
   background-color: #a6a6a6;
   border: 2px solid black;
   width: 90%;
+  height: 95%;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 10%;
+  margin-bottom: 2.5%;
+  margin-top: 2.5%;
 }
 
 /********** Large devices only **********/
@@ -145,5 +141,10 @@ section {
   }
   .col-md-12 {
     width: 100%;
+  }
+  .sec-12 {
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
