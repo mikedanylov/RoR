@@ -18,7 +18,9 @@ class RacersController < ApplicationController
   end
 
   # GET /racers/1/edit
+  # app/controllers/racers_controller.rb
   def edit
+    @races=Race.upcoming_available_to(@racer).order_by(:date.asc)
   end
 
   # POST /racers
