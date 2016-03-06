@@ -1,0 +1,28 @@
+body {
+    font-family: 'Oxygen', sans-serif;
+}
+
+.navbar ul > li > a {
+    text-align: center;
+    font-weight: bold;
+}
+
+#header-nav {
+    background-color: #505050;
+    font-weight: bold;
+    border-radius: 0;
+    border: 0;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > li > a {
+    color: #FFF5C3;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > li > a:hover {
+    color: #FF7260;
+}
+
