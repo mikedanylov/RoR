@@ -2,6 +2,11 @@ module Api
     class RacesController < ApplicationController
         protect_from_forgery with: :null_session
 
+        rescue_from Mongoid::Errors::DocumentNotFound do |exception|
+            render plain: "woops: cannot find race[#{params[:id]}]",
+            status: :not_found
+        end
+
         def index
             if !request.accept || request.accept == "*/*"
                 render plain: "/api/races, offset=[#{params[:offset]}], limit=[#{params[:limit]}]"
@@ -9,13 +14,16 @@ module Api
                 #real implementation ...
             end
         end
+
         def show
             if !request.accept || request.accept == "*/*"
                 render plain: "/api/races/#{params[:id]}"
             else
-                #real implementation ...
+                @race = Race.find(params[:id])
+                render json: @race, content_type: "#{request.accept}"
             end
         end
+
         def create
             if !request.accept || request.accept == "*/*"
                 render plain: "#{params[:race][:name]}", status: :ok
@@ -28,9 +36,26 @@ module Api
                 end
             end
         end
+
         def update
+            Rails.logger.debug("method=#{request.method}")
+            @race = Race.find(params[:id])
+            if @race.update(race_params)
+                render json: @race
+            else
+                render json: @race.errors
+            end
         end
+
         def destroy
+            @race = Race.find(params[:id])
+            @race.destroy
+            render :nothing => true, :status => :no_content
+        end
+
+        private
+        def race_params
+            params.require(:race).permit(:name, :date)
         end
     end
 end
