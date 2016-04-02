@@ -18,10 +18,14 @@ module Api
         end
         def create
             if !request.accept || request.accept == "*/*"
-                # render plain: "#{params[:race][:name]}", status: :ok
-                render plain: :nothing, status: :ok
+                render plain: "#{params[:race][:name]}", status: :ok
             else
-                #real implementation
+                @race = Race.new(race_params)
+                if @race.save
+                    render plain: race_params[:name], status: :created
+                else
+                    render json: @race.errors
+                end
             end
         end
         def update
