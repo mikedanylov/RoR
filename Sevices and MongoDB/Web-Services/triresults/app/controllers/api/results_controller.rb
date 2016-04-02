@@ -1,5 +1,7 @@
 module Api
     class ResultsController < ApplicationController
+        protect_from_forgery with: :null_session
+
         def index
             if !request.accept || request.accept == "*/*"
                 render plain: "/api/races/#{params[:race_id]}/results"

@@ -1,5 +1,7 @@
 module Api
     class RacersController < ApplicationController
+        protect_from_forgery with: :null_session
+
         def index
             if !request.accept || request.accept == "*/*"
                 render plain: "/api/racers"
