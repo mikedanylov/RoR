@@ -5,7 +5,7 @@ module Api
         rescue_from Mongoid::Errors::DocumentNotFound do |exception|
             @msg = "woops: cannot find race[#{params[:id]}]"
             if !request.accept || request.accept == "*/*"
-                render plain: @msg, status: :not_found
+                render plain: @msg, status: :ok
             else
                 render action: :error, status: :not_found, content_type: "#{request.accept}"
             end
@@ -25,8 +25,7 @@ module Api
 
         def show
             if !request.accept || request.accept == "*/*"
-                # render plain: "/api/races/#{params[:id]}"
-                render plain: "woops: cannot find race[#{params[:id]}]", status: :not_found
+                render plain: "/api/races/#{params[:id]}"
             else
                 @race = Race.find(params[:id])
                 render "race", content_type: "#{request.accept}"
@@ -47,7 +46,6 @@ module Api
         end
 
         def update
-            Rails.logger.debug("method=#{request.method}")
             @race = Race.find(params[:id])
             if @race.update(race_params)
                 render json: @race
